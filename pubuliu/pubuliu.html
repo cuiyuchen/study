@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>瀑布流</title>
+    <script src="ajax.js"></script>
+    <style>
+    ul{
+        list-style-type: none;
+        magin:0 auto;
+    }
+    li{
+        width:300px;
+        border:1px solid #ccc;
+        margin-left: 10px;
+        min-height:300px;
+        float: left;
+    }
+   /* div{
+       	height:200px;
+       	width:200px;
+       	background: #0f0;
+        }*/
+	</style>
+	<script>
+		
+	</script>
+</head>
+<body>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+<script>
+var ull=document.getElementsByTagName('ul');
+var lii=document.getElementsByTagName("li");
+var pp=document.createElement("p");	
+var list=1;
+var flag=true;
+if(flag){
+      ajaxlist();
+      flag=false;
+}
+ 
+     window.onscroll=function(){
+             var _num=getshout();
+             var _hei=lii[_num].offsetHeight+hei(lii[_num]);   
+             var _top=getscroll()
+             var hh=document.documentElement.clientHeight;
+             console.info(_hei,_top,hh,hei(lii[_num]))
+             if(_top+hh>_hei){
+                 alert(flag)
+                if(flag){
+                list++;
+                  ajaxlist();
+                  flag=false;   
+                }
+             }
+     }
+    console.info()
+    function getshout(){
+        var index=0;
+        var ah=lii[index].offsetHeight;
+        for(var i=0;i<lii.length;i++){
+            if(lii[i].offsetHeight<ah){
+                index=i;
+                ah=lii[index].offsetHeight;
+            }
+        }
+        return index;
+    }
+    function getscroll(){
+        var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+        return scrollTop;
+    }
+    function hei(obj){
+        var top=0;
+        while(obj){
+            top+=obj.offsetTop;
+        obj=obj.offsetparent;
+        }
+        return top;
+
+     }
+     function ajaxlist(){
+            ajax("get","getPics.php","cpage="+list,function(data){
+                var dat=JSON.parse(data);
+                if(!dat.length){
+                    return;
+                }
+                console.info(dat[1]);   
+                for(i=0;i<dat.length;i++){
+                var odiv=document.createElement("div");
+                var img=document.createElement("img");
+                var pp=document.createElement("p");
+                img.src=dat[i].preview;
+                img.style.width=300+"px";
+                a=dat[i].width;
+                img.style.height=300*(dat[i].height)/a+"px";
+                pp.innerHTML=dat[i].title;
+                odiv.appendChild(img);
+                odiv.appendChild(pp);
+                lii[getshout()].appendChild(odiv);
+               
+                }
+                    flag=true;
+            })  
+    
+     }
+</script>
+</html>
